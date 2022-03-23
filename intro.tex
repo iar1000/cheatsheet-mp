@@ -1,0 +1,79 @@
+\begin{comment}
+	\pagebreak
+
+\section{Introduction}
+\subsection{Week 1-2: Deep Learning Basics}
+\begin{itemize}
+	\item MLP
+	\item Fully Connected Networks
+	\item Data, tasks, loss functions
+	\item Backprop
+	\item Activation functions
+\end{itemize}
+
+\subsection{Week 3-4: CNNs, RNNs, co.}
+\begin{itemize}
+	\item CNNs
+	\item RNNs
+	\item LSTM/GRU/BPTT
+	\item Fully convolutional Networks
+\end{itemize}
+
+\subsection{Week 5-9: Generative Modeling}
+\begin{itemize}
+	\item Latent variable models
+	\item Implicit Models
+	\item Autoregressive models
+	\item Normalizing FLows/ Invertible Networks
+\end{itemize}
+
+\subsection{Week 10-12: DL 4 CV}
+\begin{itemize}
+	\item Problems and tasks in human centric computer vision
+	\item DL architectures for CV
+	\item Human body and hand models
+	\item Implicit representations
+\end{itemize}
+
+\subsection{Week 13: Deep RL}
+\end{comment}
+
+\textbf{Perceptron:} \code{while} $\exists x. w^T x > 0 \neq y$ \code{do} $w = w + \eta (y - \why) x$\\
+\begin{comment}
+	\Note{If the data is separable, the algorithm converges in finite time} \\
+\end{comment}
+\textbf{MLP:} $\forall l \quad x^{(l)} = \sigma((w^{(l)})^T x^{(l-1)} + b^{(l)}), f(x;w,b) = x^{(L)}$\\
+
+\textbf{Sigmoid:} $\sigma(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{e^x + 1}$, $\nabla: \sigma(x) \cdot (1 - \sigma(x))$\\
+
+\textbf{Softmax:} $softmax(x_i) = \exp(x_i) / \sum_j \exp(x_j)$\\
+\begin{comment}
+	\textbf{Requirements:} 1) Output must be positive \\
+	2) output must be between $[0,1]$\\
+	3) sum of all outputs must be 1, e.g. $\sum^M_i softmax(x_i) = 1$\\
+\end{comment}
+
+\todo{Linear activation function (Week 2, Page 28)}\\
+
+\textbf{MLE:} Maximise $\log L(\theta) = \log \prod p(x_i| \theta) = \sum \log p(x_i | \theta)$\\
+\begin{comment}
+	1) Write down probability distribution\\
+	2) Decompose into per sample probability\\
+	3) Minimize negative log likelihood\\
+\end{comment}
+
+\textbf{CE loss:} $- \frac{1}{N} \sum y_i \log (\sigma(w^T x_i)) + (1 - y_i) \log (1 - \sigma(w^T x_i))$\\
+\begin{comment}
+	\Note{Cross-entropy loss is a maximum likelihood estimator}
+	We assume the y's to be bernoulli distributed, from there we maximise the weights over the probability $P(D|w) = \prod^N \sigma(w^T x_i)^{y_i} (1 - \sigma(w^T x_i))^{1 - y_i}$. 
+	Taking the negative log-likelihood results in the given loss.\\
+\end{comment}
+
+ \textbf{Universal Approximation:} $\exists g(x) = \sum v_i \sigma(w_i^T x + b_i) \approx f(x)$ and $\abs{g(x) - f(x)} < \epsilon$\\
+ \begin{comment}
+ 	\Note{$\sigma: \R \rightarrow \R$ must be non-constant, bounded and continous}\\
+ 	\Note{$f \in [0,1]^m$, e.g. must be in the m-dimensional hypercube}\\
+ \end{comment}
+ 
+ 
+
