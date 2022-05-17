@@ -93,11 +93,14 @@ $X = softmax(\frac{(W_QX)(W_KX)^T}{\sqrt{D}} + M) (W_VX)$\\
 \begin{comment}
 	\textbf{RNN:} $h_t = g(x_{t-1}, h_{t-1})$, $x_t = f(x_{t-1}, h_t)$.
 	Learns to encode relevant information for future steps and maintains long-term temporal relations.\\
+	Complexity per layer: $\BigO(T D^2)$, with $\BigO(T)$ sequential operations\\
 	\textbf{CNN:} $x_t = f(x_{t-1}, x_{t-2}, ..,x_{1})$.
 	Learns to aggregate past information for the next step.\\
+	Complexity per layer: $\BigO(k T D^2)$, with $\BigO(1)$ sequential operations\\
 	\textbf{Self Attention:} $x_t = f(x_{t-1}, x_{t-2}, ..,x_{1})$.
 	Learns to identify relevant information for the next step.\\
 	Very expressive, but computationally complex. Attention is a quadratic operation.
+	Complexity per layer: $\BigO(T^2 D)$, with $\BigO(1)$ sequential operations. Can be restricted in how far we look back, reduces complexity of layer\\
 	
 	\begin{Figure}
  		\centering
@@ -105,6 +108,7 @@ $X = softmax(\frac{(W_QX)(W_KX)^T}{\sqrt{D}} + M) (W_VX)$\\
  		\captionof{figure}{AR Self-attention}
 	\end{Figure}
 \end{comment}
+\todo{Understand the runtimes better, be able to derive this}\\
 
 
 

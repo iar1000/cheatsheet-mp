@@ -136,6 +136,7 @@ $= \frac{1}{2} \sum^J_i (1+ \log(\sigma_j^2) - \mu_j - \sigma_j^2),$ if $q \sim 
 	The second part of the loss is the latent code loss. 
 	It enforces that the latent space is a gaussian, e.g. enforcing properties such as compactness and good interpolation\\
 	\Note{We want to maximize the ELBO}\\
+	\Note{If we have a sequence, the ELBO is the sum of all variational lower bounds}\\
 	\Note{The different classes are still entangled, interpolation works good, but features are not distinguishing unique properties.}
 	\begin{Figure}
  		\centering
