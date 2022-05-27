@@ -5,6 +5,7 @@
 \section{Normalizing Flows}
 \begin{comment}
 	\textbf{Goal:} What we want is a model that combines the tractable likelihoods from AR models with the latent space of VAE.\\
+	\textbf{Spoiler:} NF are invertible and creates a bijective mapping between an observation and latent representation z. It also has a tractable exact log-likelihood.
 \end{comment}
 
 \textbf{Variable change 1D:} $p_x(x) = p_z(h(x)) \abs{h(x)}$\\
@@ -13,9 +14,11 @@
 	The probabilitstic mass must be preserved!\\
 \end{comment}
 
+\textbf{Matrix det. lemma:} $det(A + uv^T) = (1 + v^T A^{-1} u) det(A)$\\
+
 \textbf{Normalizing Flow:} $f: \R \rightarrow \R$, cont. and invertible\\
 $p_X(x; \theta) = p_Z(f_\theta^{-1}(x)) \abs{det(\frac{\partial f_\theta^{-1}(x)}{\partial x})}
-= p_z(f^{-1}(x)) \abs{det(\frac{\partial f(z)}{\partial z})}^{-1}$\\
+= p_z(z) \abs{det(\frac{\partial f(z)}{\partial z})}^{-1}$\\
 \begin{comment}
 	\textbf{Example Linear transformation:} $z = Ax \\
 	\Rightarrow p_x(x) = p_z(A^{-1}x) \abs{det(A^{-1})}$\\
@@ -65,9 +68,8 @@ $(x^A; x^B)^T = (h^{-1}(y^A; \beta(y^B)); y^B)^T$, $J = ((h'; h'f'),(0;1))$\\
 \begin{comment}
 	The flow step is repeated K times and consists of 
 	\begin{itemize}
-	\item actnorm (like batch normalization)
-	\item 1x1 conv
-	\item affine coupling layer	
+	\item actnorm, trainable scale and bias parameter
+	\item 1x1 conv, generalization of a permutation
+	\item affine coupling layer, sometimes with conditional input to $\beta$
 	\end{itemize}
-
 \end{comment}
