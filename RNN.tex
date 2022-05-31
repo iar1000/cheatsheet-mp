@@ -20,7 +20,8 @@
 	\end{Figure} 
 \end{comment}
 
-\textbf{Vanilla RNN:} $\why = W_{hy} h^t$, $h^t = tanh(W_{hh} h^{t-1} + W_{xh} x^t)$
+\textbf{RNN:} $\why = W_{h} h^t$, $h^t = tanh(W [h^{t-1}, x^t])$,\\ $h\in \R^n, W \in \R^{[n \times 2n]}$
++ variable sequence length\\
 \begin{comment}
 	\textbf{Goal:} Learn transition function knowing what's worth keeping.
 	Tanh is important, otherwise we can't forget information.\\
@@ -33,10 +34,10 @@
 \end{comment}
 
 \textbf{Backprop:} $\frac{\delta L}{\delta W} 
-= \sum_{t=1}^S \frac{\delta L^t}{\delta W}
-= \sum_{t=1}^S \sum_{k=1}^t \frac{\delta L^t}{\delta y^t} \frac{\delta y^t}{\delta h^t} \frac{\delta h^t}{\delta h^k} \frac{\delta^+ h^k}{\delta W}$\\
-\todo{Understand this better}
+= \sum_{t=1}^S \sum_{k=1}^t \frac{\delta L^t}{\delta y^t} \frac{\delta y^t}{\delta h^t} (\prod_{i = k+1}^t \frac{\delta h^i}{\delta h^{i-1}})\frac{\delta^+ h^k}{\delta W}$\\
 \begin{comment}
+	When backpropagating, we always have to consider all intermediate steps via the chain rule, as they recursively depend on W.\\
+	
 	\begin{Figure}
  		\centering
  		\includegraphics[width=\linewidth]{graphic/rnn-backprop-2}
@@ -44,7 +45,8 @@
 	\end{Figure}
 \end{comment}
 
-\textbf{Gradient:} $h^t = W^T h^{t-1} = (W^T)^t h^1 = (Q^T \Lambda^t Q) h^1$\\
+\textbf{Gradient Problem:} $h^t = W^T h^{t-1} = (W^T)^t h^1 = (Q^T \Lambda^t Q) h^1$\\
+- explode: clip (stability), - vanish: memory cell\\
 \begin{comment}
 	The Eigenvalues of the weigh matrix explode or vanish when the sequence length gets to big.
 	Regularizing the Eigenvalues is proven to reduce the learning capabilities of the learning-system drastically, and is thus not an option\\
@@ -58,9 +60,12 @@
 	\end{Figure}
 \end{comment}
 
+\textbf{Naive Memory:} $c^{(t)} = W_c c^{(t-1)} + W_g g^{(t)}$, $h^{(t)} = tanh(c^t)$\\
+
 \textbf{LSTM:} $c_t^l = f \odot c_{t-1}^l + i \odot g$,
 $h_t = o \odot tanh(c_t^l)$,\\
-$f,i,o, g = [\sigma,\sigma,\sigma,tanh]\odot W^l[h_{t-1}^l h_t^{l-1}]^T$\\
+$f,i,o, g = [\sigma,\sigma,\sigma,tanh]\odot W^l[h_{t-1}^l h_t^{l-1}]^T$, $W^l \in \R^{4n \times 2n}$\\
+1) forget, 2) new info, 3) output gen\\
 \begin{comment}
 	To mitigate the vanishing gradients, we introduce a long term memory unit. 
 	There are three phases to this: forgetting, new information and output generation.\\

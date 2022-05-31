@@ -3,10 +3,12 @@
 \end{comment}
 
 \section{Auto-regressive Models}
+\textbf{Generativ vs. Discrim.:} $P(X|Y) = P(X, Y) (\text{ or } P(X))$\\
 
 \textbf{Regressive Property:} $x_t = b_0 + b_1 x_{t-1} + b_2 x_{t-2}$
 
 \textbf{Sequence Model:} $p(x) = \prod^N p(x_i | x_1,..,x_{i-1}) = \prod p(x_i | x_{<i})$\\
++ NLL gives good comparison metric\\
 \begin{comment}
 	We are trying to estimate a distribution here.\\
 	\Note{Sequence models trivially fulfill the regressive property}\\
@@ -27,6 +29,7 @@
 
 \textbf{NADE:} $h_i = \sigma(b + \sum^{i-1} w_j x_j)$ (in $O(H)$, update in $O(1)$)\\
 $\whx_i = p(x_i=1| x_{<i}) = \sigma(c_i + V_i h_i)$ ($N$ times $\Rightarrow$ total $O(NH)$)\\
+\textbf{Train:} $\frac{1}{T} \Sigma \log(p(x^t)) = \frac{1}{T} \sum^T \sum^D \log p(x_i^{(i)}| x_{<i}^{(t)})$\\
 \begin{comment}
 	The difference to FVSB-Net is that the weights are shared.
 	Therefore, the number of weights is in $\BigO(n)$.\\
@@ -40,9 +43,9 @@ $\whx_i = p(x_i=1| x_{<i}) = \sigma(c_i + V_i h_i)$ ($N$ times $\Rightarrow$ tot
 \end{comment}
 
 \textbf{PixelRNN:} $p(x) = \prod^{N^2} p(x_i | x_{<i}) = p(x_{i,R} | x_{<i}) p(x_{i,G} | x_{<i}, x_{i,R}) p(x_{i,B} | x_{<i}, x_{i,R}, x_{i,G})$\\
-RNN's are autoreg. from nature: $h_t$ summarises inputs $<t$\\
+autoreg. from nature: $h_t$ summarises $x_{<t}$; - train/gen is slow\\
 \begin{comment}
-	Learning and generation is slow, because of the explicit pixel dependencies from the pixel ordering.\\
+	Because of the explicit pixel dependencies from the pixel ordering.\\
 	If we use a LSTM for example, $h_{i,j} = f(h_{i-1,j}, h_{i,j-1}, p_{i,j})$, e.g. no parallelization in training, neither in prediction, can be made. 
 	It is very slow, but LSTM and RNN can capture long-term dependencies very well.\\
 	
@@ -90,6 +93,7 @@ RNN's are autoreg. from nature: $h_t$ summarises inputs $<t$\\
 \textbf{Self-Attention:} $K=XW_K, V=XW_V, Q=x_{t}W_Q (\in \R^{D}),\\ 
 X\in \R^{T\times D}, W\in \R^{D\times D}, \alpha = softmx(QK^T/\sqrt{D}), x_{t+1} = \alpha V$\\
 $X = softmax(\frac{(W_QX)(W_KX)^T}{\sqrt{D}} + M) (W_VX)$\\
+Complexity/path: $O(T^2D)/ O(1)$; RNN: $O(nD^2)/O(n)$, Conv: $O(knD^2)/ O(\log_k(n))$\\ 
 \begin{comment}
 	\textbf{RNN:} $h_t = g(x_{t-1}, h_{t-1})$, $x_t = f(x_{t-1}, h_t)$.
 	Learns to encode relevant information for future steps and maintains long-term temporal relations.\\
@@ -108,7 +112,6 @@ $X = softmax(\frac{(W_QX)(W_KX)^T}{\sqrt{D}} + M) (W_VX)$\\
  		\captionof{figure}{AR Self-attention}
 	\end{Figure}
 \end{comment}
-\todo{Understand the runtimes better, be able to derive this}\\
 
 
 

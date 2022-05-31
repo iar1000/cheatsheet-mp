@@ -3,30 +3,29 @@
 \end{comment}
 
 \section{Reinforcement Learning}
+map states to actions, maximize reward, in uncertain and unknown environment\\
+
 
 \textbf{Return:} $G_t = \sum^\infty y^k R_{t+k+1}$\\
-\textbf{Value:} $v_\pi(s) ) \E_\pi[G_t | S_t = s] = \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', r| s,a)[r + \gamma \E_\pi[G_{t+1} | S_{t+1} = S']]$\\
+\textbf{Value:} $v_\pi(s) = \E_\pi[G_t | S_t = s] \\
+= \sum_a \pi(a|s) \sum_{s'} \sum_r p(s', r| s,a)[r + \gamma \E_\pi[G_{t+1} | S_{t+1} = S']]$\\
 \begin{comment}
 	The second term is just the weighted sum of rewards given the current state and action.
 	The full thing is just also weighted by the current state and action taken.\\
 \end{comment}
 
-\textbf{Q-Func:} $q_\pi(s, a) = \E_\pi[G_t | S_t = s, A_t = a]$\\
+\textbf{Q-Func:} $q_\pi(s, a) = \E_\pi[G_t | S_t = s, A_t = a]$, +no trans function\\
 \begin{comment}
 	Helps when transition function is not given, as it models the value after a certain action, instead of considering all actions.\\
 \end{comment}
 
-\textbf{Bellman equation:} $v_\pi(s) = \sum_a \pi(a|s) \sum_{s', r} p(s', r| s,a)[r + \gamma v_\pi(s')]$\\
+\textbf{Bellman Eq:} $v_\pi(s) = \sum_a \pi(a|s) \sum_{s', r} p(s', r| s,a)[r + \gamma v_\pi(s')]$\\
+\textbf{opt:} $v_*(s) = \max_a q_*(s,a) = \max_a \sum_{s'} p(s', r| s,a)[r + \gamma v_*(s')]$\\
 \begin{comment}
 	What it tells us is that we can decompose the state-value function into immediate reward plus the discounted value of the successor state.\\
 \end{comment}
 
-\textbf{Greedy value policy:} $\pi'(s) = \argmax(r(s,a) + \gamma V_\pi(p(s,a)))$\\
-\begin{comment}
-	\Note{One can show that this greedy policy is always at least as good as any other policy}\\
-\end{comment}
-
-\textbf{DP:}\\
+\textbf{DP:} compute optimal policy in perfect model, limited utility\\
 \begin{comment}
 	Pros:
 	\begin{itemize}
@@ -43,7 +42,19 @@
 	\end{itemize}
 \end{comment}
 
-\textbf{TD learning:} $\Delta V(s) = r(s,a) + \gamma V(s') - V(s)$, $V(s) \leftarrow V(s) + \alpha \Delta V(s)$\\
+\textbf{Greedy V policy:} $\pi'(s) = \argmax_a(r(s,a) + \gamma V_\pi(p(s,a)))$\\
+fix point $V^*(s) = \max_a r(s,a) + \gamma V^*(p(s,a))$, $\pi^*$ of $V^*$ is $\pi^*$\\
+calculate new value function forall state, more efficient\\
+\begin{comment}
+	\Note{One can show that this greedy policy is always at least as good as any other policy}\\
+\end{comment}
+
+\textbf{Policy iteration:} Evaluate V with current policy, improve policy\\
+
+\textbf{X:} +exact, +converges, -trans. prob, -iterate states, -memory\\
+
+\textbf{TD learning:} $\Delta V(s) = r(s,a) + \gamma V(s') - V(s)$, +less variance\\
+$V(s) \leftarrow V(s) + \alpha \Delta V(s)$, +use only visited states, +effiecient, +no trans. prob, -local min, -biased\\
 \begin{comment}
 	Only update value function of visited states.\\
 	Random policy would lead to bias in close states.
@@ -65,17 +76,22 @@
 	
 \end{comment}
 
-\textbf{SARSA:} $\Delta Q(S,A) = R + \gamma Q(S', A') - Q(S, A)$, $Q(S, A) \leftarrow Q(S, A) + \alpha \Delta Q(S, A)$\\
+\textbf{eps-greedy:}. take best action, but random with low prob\\
+
+\textbf{SARSA:} $\Delta Q(S,A) = R + \gamma Q(S', A') - Q(S, A)$, on-policy\\
+$Q(S, A) \leftarrow Q(S, A) + \alpha \Delta Q(S, A)$\\
 \begin{comment}
 	On-policy method, because we are using the current policy to get the rewards from Q\\
 \end{comment}
 
-\textbf{Q-Learning:} $\Delta Q(S,A) = R_{t+1} + \gamma \max_a[Q(S', a)] - Q(S, A)$, $Q(S,A) \leftarrow Q(S, A) + \alpha \Delta Q(S, A)$\\
+\textbf{Q-Learning:} $\Delta Q(S,A) = R_{t+1} + \gamma \max_a[Q(S', a)] - Q(S, A)$\\
+$Q(S,A) \leftarrow Q(S, A) + \alpha \Delta Q(S, A)$, off-policy\\
 \begin{comment}
 	Off-policy, because the policy we use to update the Q function is different from the policy we use to collect the data\\
 \end{comment}
 
 \textbf{Deep Q:} $\cL(\theta) = (R + \gamma \max_{a'}[Q_\theta(S', a')] - Q_\theta(S,A))^2$\\
+i.i.d assumption, use replay buffer to replay
 \begin{comment}
 	SGD assumes i.i.d: Use replay buffer in training phase and randomly sample transition from the buffer to update. 
 	Since Q-learning is off-policy, we are allowed to use old samples\\

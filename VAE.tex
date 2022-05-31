@@ -2,9 +2,8 @@
 	\pagebreak
 \end{comment}
 
-\section{Variational Auto Encoders}
 \begin{comment}
-	Supervised vs. Unsupervised learning: \\
+	\textbf{Taxonomy of generative learning:}\\
 	\textbf{Supervised learning:} Tries to learn a function that maps $X \Rightarrow Y$, used in classification, regression, object detection and segmentation.\\
 	\textbf{Unsupervised Learning:} The Goal here is to learn the hidden structure of the data, such as in clustering, feature learning, dimensionality reduction or density estimation.\\
 	\textbf{Generative Modeling (our Goal):} Given training data, learn a distribution and generate new samples drawn from the learned distribution.
@@ -14,8 +13,15 @@
  		\includegraphics[width=\linewidth]{graphic/vae-taxonomy}
  		\captionof{figure}{Taxonomy of variational models}
 	\end{Figure}
-	
-	\begin{Figure}
+\end{comment}
+\begin{Figure}
+ 		\centering
+ 		\includegraphics[width=\linewidth]{graphic/gen-overview}
+\end{Figure}
+
+\section{Variational Auto Encoders}
+\begin{comment}
+		\begin{Figure}
  		\centering
  		\includegraphics[width=\linewidth]{graphic/vae-example}
  		\captionof{figure}{VAE Pipeline}
@@ -43,7 +49,8 @@
 
 \textbf{NN:} $z = f(x) = \sigma(Wx + b)$, $\whx = g(\wha (x)) = \sigma(W^*z + c)$\\
 
-\textbf{Latent Space:} meaningful DOF, optimally continous and interpolatable, under- or overcomplete\\
+\textbf{Latent Space:} meaningful DOF, continous and interpolatable\\
+undercomp: compress, features; overcomp: copy components\\
 \begin{comment}
 	Not all DOF are important, when we look at the image space (f.e. 256 x 256 x 3), we could as well sample something very random which does not represent an image.\\
 	\textbf{Undercomplete Z:} Compressed representation, learns important features of input. Bad for out-of-distribution samples\\
@@ -56,9 +63,11 @@
 \end{comment}
 
 
-\textbf{Denoising:} add gaussian noise to input, reconstruct to original\\
+\textbf{Denoise:} input+gaussian noise, reconstruct w. overcomp. z\\
 \begin{comment}
-	\Note{The Latent space is overcomplet in this instance}\\ 
+	\Note{The Latent space is overcomplet in this instance}\\
+	The model learns components of the images, which it can add to the obstructed image in the end.
+	
 	\begin{Figure}
  		\centering
  		\includegraphics[width=\linewidth]{graphic/vae-denoising}
@@ -72,7 +81,7 @@
 \end{comment}
 
 
-\textbf{Limit:} latent space not interpolatable, unseen samples?
+\textbf{Limit:} z not interpolatable; +reconstruction, -new samples\\
 \begin{comment}
 	Freshly generated samples from latent space Z do not make much sense, as in these regions, the decoder doesn't know what makes sense.
 	Still, for reconstruction, the latent space is very good.
@@ -118,9 +127,14 @@
 \end{comment}
 
 \textbf{Decode:} $p_{\theta}(x|z)$ for $\mu_{(\whx|z)}, \Sigma_{(\whx|z)}$, $\whx|z \sim \cN(\mu_{(\whx|z)}, \Sigma_{(\whx|z)})$\\
+LH: $p_\theta(x) = \int_z p_\theta(x|z) p_\theta(z) dz$, Post: $p_\theta(z|x) = \frac{p_\theta(X|Z) p_\theta(z)}{p_\theta(x)}$\\
+\begin{comment}
+	The decoder, i.e. the conditional $p(x|z)$ is usually a NN, because the output can be really complex, f.e. if we want the generate an image.\\
+\end{comment}
 
 \textbf{KL:} $-D_{KL}(q_\phi(z|x) || p_\theta(z)) = \int_x q_\phi(z|x) \log(\frac{p_\theta(z)}{q_\phi(z|x)})$\\
 $= \frac{1}{2} \sum^J_i (1+ \log(\sigma_j^2) - \mu_j - \sigma_j^2),$ if $q \sim \cN(\mu, \sigma I), p \sim \cN(0,I)$\\
+Properties: asymmetric and non-negative\\
 \textit{from exercise:} $\int p(z) \log q(z)dz = \\
 - \frac{J}{2} \log 2\pi - \frac{1}{2} \sum_i^J \log \sigma_{p,j} - \frac{1}{2} \sum_j^J \frac{\sigma^2_{p,j} + (\mu_{p,j} - \mu_{q,j})^2}{\sigma^2_{q,j}}$\\
 \begin{comment}
@@ -146,9 +160,9 @@ $= \frac{1}{2} \sum^J_i (1+ \log(\sigma_j^2) - \mu_j - \sigma_j^2),$ if $q \sim 
 	\end{Figure}
 \end{comment}
 
+\textbf{Re-parameterization:} $z = \mu + \sigma \epsilon$, $\epsilon \sim \cN(0,1)$\\
 
-
-\textbf{Goal:} Learn features that correspond to distinct factors of variaton e.g., digits and style (or thickness, orienta9on)
+\textbf{Goal:} Learn features that correspond to distinct factors of variaton e.g., digits and style (or thickness, orientation)
 \begin{comment}
 	Statistical independence of the of the features can be used\\
 	In the picture below, one can see that the AE might achieve detangled features, but it is bad for interpolation. The KL divergence loss craetes some entaglement, though.\\
