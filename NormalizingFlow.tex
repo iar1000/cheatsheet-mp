@@ -3,6 +3,7 @@
 \end{comment}
 
 \section{Normalizing Flows}
++ invertible, +exact LL, +latent space\\
 \begin{comment}
 	\textbf{Goal:} What we want is a model that combines the tractable likelihoods from AR models with the latent space of VAE.\\
 	\textbf{Spoiler:} NF are invertible and creates a bijective mapping between an observation and latent representation z. It also has a tractable exact log-likelihood.
@@ -19,6 +20,7 @@
 \textbf{Normalizing Flow:} $f: \R \rightarrow \R$, cont. and invertible\\
 $p_X(x; \theta) = p_Z(f_\theta^{-1}(x)) \abs{det(\frac{\partial f_\theta^{-1}(x)}{\partial x})}
 = p_z(z) \abs{det(\frac{\partial f(z)}{\partial z})}^{-1}$\\
+Triangular Jacobian det in $O(d)$, else $O(d^3)$\\
 \begin{comment}
 	\textbf{Example Linear transformation:} $z = Ax \\
 	\Rightarrow p_x(x) = p_z(A^{-1}x) \abs{det(A^{-1})}$\\
@@ -56,15 +58,15 @@ $(x^A; x^B)^T = (h^{-1}(y^A; \beta(y^B)); y^B)^T$, $J = ((h'; h'f'),(0;1))$\\
 \end{comment}
 
 \textbf{Train:}$log p_x(D) = \sum_{x}^{D} (log p_z(f^{-1}(x)) +  \sum_k \log \abs{det(\frac{\partial f^{-1}(x)}{\partial x})})$\\
-\textbf{Inference:} draw $z \sim p_z(.)$, $\whx = f(z)$\\
+\textbf{Inference:} $z \sim p_z(.)$, $\whx = f(z)$\\
 \begin{comment}
 	The whole point of this is that we want to draw $z \sim \cN(0,I)$ and then learn the transformation to create really complex x\\
-	-\\ 
-	-\\
 \end{comment}
 
 \textbf{Model:} $x_i \rightarrow squeeze \rightarrow n.flow \rightarrow split \rightarrow z_i (\text{repeat } L-1)\\
-\rightarrow squeeze \rightarrow n.flow \rightarrow z_L$\\
+\rightarrow squeeze \rightarrow n.flow \rightarrow z_L$, $z_i$ are outputs\\
+\textbf{Squeeze/Split:} reduce spatial dim, pass on half\\
+\textbf{Flow:} actnorm, 1x1 conv, coupling\\
 \begin{comment}
 	The flow step is repeated K times and consists of 
 	\begin{itemize}
@@ -73,3 +75,5 @@ $(x^A; x^B)^T = (h^{-1}(y^A; \beta(y^B)); y^B)^T$, $J = ((h'; h'f'),(0;1))$\\
 	\item affine coupling layer, sometimes with conditional input to $\beta$
 	\end{itemize}
 \end{comment}
+
+\textbf{StyleGAN vs. StyleFlow:} Replace mapping Net with normal flow\\

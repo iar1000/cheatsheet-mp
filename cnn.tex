@@ -70,6 +70,8 @@
 	\textbf{Correlation = Convolution:} iff $K(i,j) = K(-i, -j)$\\
 \end{comment}
 
+\textit{Ex:} rotate K by 180 to Y, $\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \star K$, $\frac{\partial E}{\partial K} = rot(\frac{\partial E}{\partial Y} \star X)$ \\
+
 \textbf{Matrix $I * K$:} band matrix $K \in \R^{n+m-1 \times n}$, $k_i$ on diagonal\\
 \begin{comment}
 		\begin{Figure}
@@ -94,7 +96,7 @@
 	\end{Figure}
 \end{comment}
 
-\textbf{Weight sharing:} Same feature detector K for whole I\\
+\textbf{Weight sharing:} Same K for whole I, local not global\\
 \begin{comment}
 	\Note{This makes the feature detector robust agains affine transformations, as it detects the feature in the whole image once trained}\\
 \end{comment}
@@ -125,8 +127,6 @@
  		\captionof{figure}{Flipped convolution operator}
 	\end{Figure}
 \end{comment}
-\todo{Do calculation yourself to see why it is flipped, or better, understand the relation to the "standart" convolution}\\
-
 
 \begin{comment}
 	\Note{Each layer holds more complex "patterns", this resembles the neuron complexity hierarchy we have seen in nature.}\\
